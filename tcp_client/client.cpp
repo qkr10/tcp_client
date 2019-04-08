@@ -11,7 +11,7 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-#define SERVER_IP "210.220.163.82"
+#define SERVER_IP "1.224.129.109"
 #define DEFAULT_PORT "27014"
 
 using namespace std;
@@ -120,6 +120,13 @@ int __cdecl main(int argc, char **argv)
 	int index;
 	sscanf(recvbuf, "%d", &index);
 	//본격 루프
+	if (index == -1) {
+		printf("연결한도를 초과!!!");
+		system("pause");
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return 1;
+	}
 	int sequence = 0;
 	gotoxy({ 0, 29 });
 	printf("종료할땐 esc눌러서!!! 방향키로 상하좌우 이동!!!");
@@ -141,6 +148,7 @@ int __cdecl main(int argc, char **argv)
 			iResult = send(ConnectSocket, sendbuf, 200, 0);
 			if (iResult == SOCKET_ERROR) {
 				printf("send failed with error: %d\n", WSAGetLastError());
+				system("pause");
 				closesocket(ConnectSocket);
 				WSACleanup();
 				return 1;
@@ -166,7 +174,7 @@ int __cdecl main(int argc, char **argv)
 			return 0;
 		}
 
-		_sleep(20);
+		_sleep(50);
 	}
 
 	freeaddrinfo(result);
